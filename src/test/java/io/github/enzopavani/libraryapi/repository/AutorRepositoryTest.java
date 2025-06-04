@@ -11,13 +11,13 @@ import java.util.Optional;
 import java.util.UUID;
 
 @SpringBootTest
-public class AutorRepositoryTest {
+class AutorRepositoryTest {
 
     @Autowired
     AutorRepository repository;
 
     @Test
-    public void salvarTest() {
+    void salvarTest() {
         Autor a1 = new Autor();
         a1.setNome("Maria");
         a1.setNacionalidade("Brasileira");
@@ -28,7 +28,7 @@ public class AutorRepositoryTest {
     }
 
     @Test
-    public void atualizarTest() {
+    void atualizarTest() {
         var id = UUID.fromString("167bd199-fbb5-4e3a-9a71-d42bd2ed66a0");
 
         Optional<Autor> possivelAutor = repository.findById(id);
@@ -46,24 +46,24 @@ public class AutorRepositoryTest {
     }
 
     @Test
-    public void listarTest() {
+    void listarTest() {
         List<Autor> lista = repository.findAll();
         lista.forEach(System.out::println);
     }
 
     @Test
-    public void countTest() {
+    void countTest() {
         System.out.println("Contagem de autores: " + repository.count());
     }
 
     @Test
-    public void deleteByIdTest() {
+    void deleteByIdTest() {
         var id = UUID.fromString("83404505-ef88-4bab-a4db-05c70c79e558");
         repository.deleteById(id);
     }
 
     @Test
-    public void deleteTest() {
+    void deleteTest() {
         var id = UUID.fromString("167bd199-fbb5-4e3a-9a71-d42bd2ed66a0");
         var marcio = repository.findById(id).get();
         repository.delete(marcio);
