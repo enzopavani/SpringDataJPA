@@ -32,6 +32,24 @@ class LivroRepositoryTest {
         Autor autor = autorRepository
                 .findById(UUID.fromString("cd7e1905-5817-43c5-a52e-6c4e613ffe46"))
                 .orElse(null);
+        l1.setAutor(new Autor());
+
+        repository.save(l1);
+    }
+
+    @Test
+    void salvarCascadeTest() {
+        Livro l1 = new Livro();
+        l1.setIsbn("90887-84824");
+        l1.setPreco(BigDecimal.valueOf(70));
+        l1.setGenero(GeneroLivro.CIENCIA);
+        l1.setTitulo("UFO");
+        l1.setDataPublicação(LocalDate.of(1982, 5, 10));
+
+        Autor autor = new Autor();
+        autor.setNome("Enzo");
+        autor.setNacionalidade("Brasileiro");
+        autor.setDataNascimento(LocalDate.of(1949, 7, 3));
         l1.setAutor(autor);
 
         repository.save(l1);
