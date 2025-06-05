@@ -4,8 +4,10 @@ import io.github.enzopavani.libraryapi.model.Autor;
 import io.github.enzopavani.libraryapi.model.Livro;
 import io.github.enzopavani.libraryapi.model.enums.GeneroLivro;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -56,5 +58,15 @@ public interface LivroRepository extends JpaRepository<Livro, UUID> {
     // positional parameters
     @Query(" select l from Livro l where l.genero = ?1 order by ?2 ")
     List<Livro> findByGeneroPositionalParameters(GeneroLivro generoLivro, String nomePropriedade);
+
+    @Modifying
+    @Transactional
+    @Query(" delete from Livro where genero = ?1")
+    void deleteByGenero(GeneroLivro genero);
+
+    @Modifying
+    @Transactional
+    @Query(" update Livro set dataPublicacao = ?1 ")
+    void updateDataPublicacao(LocalDate novaData);
 
 }
