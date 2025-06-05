@@ -6,6 +6,7 @@ import io.github.enzopavani.libraryapi.model.enums.GeneroLivro;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -23,16 +24,16 @@ class LivroRepositoryTest {
     @Test
     void salvarTest() {
         Livro l1 = new Livro();
-        l1.setIsbn("90887-84824");
-        l1.setPreco(BigDecimal.valueOf(70));
-        l1.setGenero(GeneroLivro.CIENCIA);
-        l1.setTitulo("UFO");
-        l1.setDataPublicação(LocalDate.of(1982, 5, 10));
+        l1.setIsbn("50356-12845");
+        l1.setPreco(BigDecimal.valueOf(90));
+        l1.setGenero(GeneroLivro.MISTERIO);
+        l1.setTitulo("UFO 2 REMASTERED");
+        l1.setDataPublicacao(LocalDate.of(1982, 5, 10));
 
         Autor autor = autorRepository
                 .findById(UUID.fromString("cd7e1905-5817-43c5-a52e-6c4e613ffe46"))
                 .orElse(null);
-        l1.setAutor(new Autor());
+        l1.setAutor(autor);
 
         repository.save(l1);
     }
@@ -44,7 +45,7 @@ class LivroRepositoryTest {
         l1.setPreco(BigDecimal.valueOf(70));
         l1.setGenero(GeneroLivro.CIENCIA);
         l1.setTitulo("UFO");
-        l1.setDataPublicação(LocalDate.of(1982, 5, 10));
+        l1.setDataPublicacao(LocalDate.of(1982, 5, 10));
 
         Autor autor = new Autor();
         autor.setNome("Enzo");
@@ -69,8 +70,19 @@ class LivroRepositoryTest {
     }
 
     @Test
-    void deletar() {
+    void deletarTest() {
         UUID id = UUID.fromString("cf2c0ef5-ad36-447b-bfa5-9d536b21d931");
         repository.deleteById(id);
+    }
+
+    @Test
+    @Transactional
+    void buscarLivroTest() {
+        UUID id = UUID.fromString("bab317b5-7a26-4c7d-baa4-bcc094b5f147");
+        Livro livro = repository.findById(id).orElse(null);
+        System.out.println("Livro:");
+        System.out.println(livro.getTitulo());
+        System.out.println("Autor:");
+        System.out.println(livro.getAutor().getNome());
     }
 }
