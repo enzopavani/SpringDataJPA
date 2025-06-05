@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 
 @SpringBootTest
@@ -25,7 +26,7 @@ class LivroRepositoryTest {
     void salvarTest() {
         Livro l1 = new Livro();
         l1.setIsbn("50356-12845");
-        l1.setPreco(BigDecimal.valueOf(90));
+        l1.setPreco(BigDecimal.valueOf(240));
         l1.setGenero(GeneroLivro.MISTERIO);
         l1.setTitulo("UFO 2 REMASTERED");
         l1.setDataPublicacao(LocalDate.of(1982, 5, 10));
@@ -84,5 +85,33 @@ class LivroRepositoryTest {
         System.out.println(livro.getTitulo());
         System.out.println("Autor:");
         System.out.println(livro.getAutor().getNome());
+    }
+
+    @Test
+    void pesquisaPorTituloTest() {
+        List<Livro> lista = repository.findByTitulo("UFO");
+        lista.forEach(System.out::println);
+    }
+
+    @Test
+    void pesquisaPorIsbnTest() {
+        List<Livro> lista = repository.findByIsbn("50356-12845");
+        lista.forEach(System.out::println);
+    }
+
+    @Test
+    void pesquisaPorTituloEPrecoTest() {
+        var titulo = "UFO 2 REMASTERED";
+        var preco = BigDecimal.valueOf(240);
+        List<Livro> lista = repository.findByTituloAndPreco(titulo, preco);
+        lista.forEach(System.out::println);
+    }
+
+    @Test
+    void pesquisaPorTituloOuIsbnTest() {
+        var titulo = "UFO 2 REMASTERED";
+        var isbn = "15946-24815";
+        List<Livro> lista = repository.findByTituloOrIsbn(titulo, isbn);
+        lista.forEach(System.out::println);
     }
 }
