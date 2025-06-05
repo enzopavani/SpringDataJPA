@@ -3,6 +3,7 @@ package io.github.enzopavani.libraryapi.model;
 import io.github.enzopavani.libraryapi.model.enums.GeneroLivro;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.ToString;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -10,14 +11,8 @@ import java.util.UUID;
 
 @Entity
 @Table(name="livro")
-/*
-- Anotação @Data inclui
-@Getter@Setter
-@ToString
-@EqualsAndHashCode
-@RequiredArgsConstructor
- */
 @Data
+@ToString(exclude="autor")
 public class Livro {
 
     @Id
