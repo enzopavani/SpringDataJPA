@@ -1,20 +1,24 @@
 package io.github.enzopavani.libraryapi.repository;
 
 import io.github.enzopavani.libraryapi.model.Autor;
+import io.github.enzopavani.libraryapi.model.Livro;
+import io.github.enzopavani.libraryapi.model.enums.GeneroLivro;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @SpringBootTest
 class AutorRepositoryTest {
 
     @Autowired
     AutorRepository repository;
+
+    // @Autowired
+    // LivroRepository livroRepository;
 
     @Test
     void salvarTest() {
@@ -67,5 +71,36 @@ class AutorRepositoryTest {
         var id = UUID.fromString("167bd199-fbb5-4e3a-9a71-d42bd2ed66a0");
         var marcio = repository.findById(id).get();
         repository.delete(marcio);
+    }
+
+    @Test
+    void salvarAutorComLivrosTest() {
+        Autor autor = new Autor();
+        autor.setNome("John");
+        autor.setNacionalidade("Paraguaia");
+        autor.setDataNascimento(LocalDate.of(1970, 11, 10));
+
+        Livro livro = new Livro();
+        livro.setIsbn("15946-24815");
+        livro.setPreco(BigDecimal.valueOf(110));
+        livro.setGenero(GeneroLivro.BIOGRAFIA);
+        livro.setTitulo("La vida de John");
+        livro.setDataPublicacao(LocalDate.of(1998, 6, 24));
+        livro.setAutor(autor);
+
+        Livro livro2 = new Livro();
+        livro2.setIsbn("15721-24255");
+        livro2.setPreco(BigDecimal.valueOf(100));
+        livro2.setGenero(GeneroLivro.FANTASIA);
+        livro2.setTitulo("La vida fantastica de John");
+        livro2.setDataPublicacao(LocalDate.of(1999, 7, 25));
+        livro2.setAutor(autor);
+
+        autor.setLivros(new ArrayList<>());
+        autor.getLivros().addAll(Arrays.asList(livro, livro2));
+
+        repository.save(autor);
+
+        // livroRepository.saveAll(autor.getLivros());
     }
 }
