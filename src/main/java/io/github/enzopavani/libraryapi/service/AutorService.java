@@ -2,6 +2,7 @@ package io.github.enzopavani.libraryapi.service;
 
 import io.github.enzopavani.libraryapi.model.Autor;
 import io.github.enzopavani.libraryapi.repository.AutorRepository;
+import io.github.enzopavani.libraryapi.validator.AutorValidator;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,12 +13,15 @@ import java.util.UUID;
 public class AutorService {
 
     private final AutorRepository repository;
+    private final AutorValidator validator;
 
-    public AutorService(AutorRepository repository) {
+    public AutorService(AutorRepository repository, AutorValidator validator) {
         this.repository = repository;
+        this.validator = validator;
     }
 
     public Autor salvar(Autor autor) {
+        validator.validar(autor);
         return repository.save(autor);
     }
 
@@ -46,6 +50,7 @@ public class AutorService {
         if(autor.getId() == null) {
             throw new IllegalArgumentException("Esse autor não existe na base de dados.");
         }
+        validator.validar(autor);
         repository.save(autor);
     }
 }
