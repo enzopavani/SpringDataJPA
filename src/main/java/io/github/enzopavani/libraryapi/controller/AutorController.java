@@ -2,6 +2,7 @@ package io.github.enzopavani.libraryapi.controller;
 
 import io.github.enzopavani.libraryapi.controller.dto.AutorDTO;
 import io.github.enzopavani.libraryapi.controller.dto.ErroResposta;
+import io.github.enzopavani.libraryapi.exceptions.OperacaoNaoPermitidaException;
 import io.github.enzopavani.libraryapi.exceptions.RegistroDuplicadoException;
 import io.github.enzopavani.libraryapi.model.Autor;
 import io.github.enzopavani.libraryapi.service.AutorService;
@@ -61,14 +62,19 @@ public class AutorController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletar(@PathVariable String id) {
-        var idAutor = UUID.fromString(id);
-        Optional<Autor> autorOptional = service.obterPorId(idAutor);
-        if(autorOptional.isEmpty()) {
-            return ResponseEntity.notFound().build();
+    public ResponseEntity<Object> deletar(@PathVariable String id) {
+        try {
+            var idAutor = UUID.fromString(id);
+            Optional<Autor> autorOptional = service.obterPorId(idAutor);
+            if (autorOptional.isEmpty()) {
+                return ResponseEntity.notFound().build();
+            }
+            service.deletar(autorOptional.get());
+            return ResponseEntity.noContent().build();
+        } catch (OperacaoNaoPermitidaException e) {
+            var erroResposta = ErroResposta.respostaPadrao(e.getMessage());
+            return ResponseEntity.status(erroResposta.status()).body(erroResposta);
         }
-        service.deletar(autorOptional.get());
-        return ResponseEntity.noContent().build();
     }
 
     @GetMapping
