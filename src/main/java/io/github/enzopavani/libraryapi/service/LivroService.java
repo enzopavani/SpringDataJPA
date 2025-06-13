@@ -32,11 +32,6 @@ public class LivroService {
 
     public List<Livro> pesquisa(
             String isbn, String titulo, String nomeAutor, GeneroLivro genero, Integer anoPublicacao) {
-        // Specification<Livro> specs = Specification
-        //         .where(LivroSpecs.isbnEqual(isbn))
-        //         .and(LivroSpecs.tituloLike(titulo))
-        //         .and(LivroSpecs.generoEqual(genero));
-
         // select * from livro where 0 = 0
         Specification<Livro> specs = Specification.where(((root, query, cb) -> cb.conjunction()));
         if(isbn != null) {
@@ -55,7 +50,13 @@ public class LivroService {
         if(nomeAutor != null) {
             specs = specs.and(LivroSpecs.nomeAutorLike(nomeAutor));
         }
-
         return repository.findAll(specs);
+    }
+
+    public void atualizar(Livro livro) {
+        if(livro.getId() == null) {
+            throw new IllegalArgumentException("Esse livro não existe na base de dados.");
+        }
+        repository.save(livro);
     }
 }
