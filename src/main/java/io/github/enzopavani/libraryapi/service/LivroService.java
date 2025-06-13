@@ -1,10 +1,14 @@
 package io.github.enzopavani.libraryapi.service;
 
 import io.github.enzopavani.libraryapi.model.Livro;
+import io.github.enzopavani.libraryapi.model.enums.GeneroLivro;
 import io.github.enzopavani.libraryapi.repository.LivroRepository;
+import io.github.enzopavani.libraryapi.repository.specs.LivroSpecs;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -24,5 +28,28 @@ public class LivroService {
 
     public void deletar(Livro livro) {
         repository.delete(livro);
+    }
+
+    public List<Livro> pesquisa(
+            String isbn, String titulo, String nomeAutor, GeneroLivro genero, Integer anoPublicacao) {
+        // Specification<Livro> specs = Specification
+        //         .where(LivroSpecs.isbnEqual(isbn))
+        //         .and(LivroSpecs.tituloLike(titulo))
+        //         .and(LivroSpecs.generoEqual(genero));
+
+        // select * from livro where 0 = 0
+        Specification<Livro> specs = Specification.where(((root, query, cb) -> cb.conjunction()));
+        if(isbn != null) {
+            // query = query and isbn = :isbn
+            specs = specs.and(LivroSpecs.isbnEqual(isbn));
+        }
+        if(titulo != null) {
+            specs = specs.and(LivroSpecs.tituloLike(titulo));
+        }
+        if(genero != null) {
+            specs = specs.and(LivroSpecs.generoEqual(genero));
+        }
+
+        return repository.findAll(specs);
     }
 }
