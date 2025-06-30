@@ -1,9 +1,11 @@
 package io.github.enzopavani.libraryapi.service;
 
 import io.github.enzopavani.libraryapi.model.Livro;
+import io.github.enzopavani.libraryapi.model.Usuario;
 import io.github.enzopavani.libraryapi.model.enums.GeneroLivro;
 import io.github.enzopavani.libraryapi.repository.LivroRepository;
 import io.github.enzopavani.libraryapi.repository.specs.LivroSpecs;
+import io.github.enzopavani.libraryapi.security.SecurityService;
 import io.github.enzopavani.libraryapi.validator.LivroValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -21,9 +23,12 @@ public class LivroService {
 
     private final LivroRepository repository;
     private final LivroValidator validator;
+    private final SecurityService securityService;
 
     public Livro salvar(Livro livro) {
         validator.validar(livro);
+        Usuario usuario = securityService.obterUsuarioLogado();
+        livro.setUsuario(usuario);
         return repository.save(livro);
     }
 
