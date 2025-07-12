@@ -4,8 +4,9 @@ server:
 spring:
   application:
     name: libraryapi
-  profiles:
-    active: production
+#  profiles:
+#    active: production
+# SPRING_PROFILES_ACTIVE
   output:
     ansi:
       enabled: ALWAYS
@@ -54,3 +55,21 @@ management:
 
 springdoc:
   override-with-generic-response: false
+
+
+# production
+---
+spring:
+  config:
+    activate:
+      on-profile: production
+  jpa:
+    show-sql: false
+
+
+# homologação
+---
+spring:
+  config:
+    activate:
+      on-profile: homologacao
